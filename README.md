@@ -32,7 +32,7 @@ It will provide you multiple callbacks.
 * callback :on_crit
 
 Each of these callbacks accept 3 arguments -> ** | value, warn, crit | **
-Please checkout [keepalive](https://github.com/timmyArch/htmon/lib/htmon/icinga/modules/keepalive.rb) module.
+Please checkout [keepalive](https://github.com/timmyArch/htmon-icinga/blob/master/lib/htmon/icinga/modules/keepalive.rb) module.
 
 ## Contributing
 
