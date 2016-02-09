@@ -1,0 +1,26 @@
+#!/usr/bin/ruby
+
+require 'htmon/icinga'
+
+Conf = Struct.new(:url, :metric,
+                  :warn, :thresh, :hostname).new
+
+ARGV.each.with_index do |argument,i|
+  case argument
+  when '--url' then Conf.url = ARGV[i+1]
+  when '--metric' then Conf.metric = ARGV[i+1]
+  when '--hostname' then Conf.hostname = ARGV[i+1]
+  when '--warn' then Conf.warn = ARGV[i+1].to_i
+  when '--thresh' then Conf.thresh = ARGV[i+1].to_i
+  end
+end
+
+abort("hostname missing") unless Conf.hostname
+abort("metric missing") unless Conf.metric
+abort("redis url missing") unless Conf.url
+
+Htmon::Icinga.new(redis: Redis.new(url: Conf.url),
+                  metric: Conf.metric,
+                  hostname: Conf.hostname,
+                  warn: Conf.warn,
+                  thresh: Conf.thresh).result.print
