@@ -4,10 +4,11 @@ module Htmon
 
     def self.new hostname: nil, metric: nil, thresh: nil, warn: nil, redis: nil
       a = Module.modules.find do |x|
-        x.metric_name.to_s == metric.to_s
+        x.metric_name.to_s == metric.to_s[/^[^:]+/]
       end
       if a
-        a.new(hostname: hostname, thresh: thresh, warn: warn, redis: redis)
+        a.new(hostname: hostname, thresh: thresh, warn: warn, 
+              redis: redis, metric: metric)
       else
         raise "No module found"
       end
@@ -63,7 +64,7 @@ module Htmon
         end
 
         def metric_name
-          @metric_name || name.downcase[/::([^:]+)$/,1]
+          @metric_name || name.gsub(/^Htmon::Icinga::Module::/, '').underscore
         end
 
         def callback method, &block
@@ -77,10 +78,10 @@ module Htmon
 
       end
 
-      attr_accessor :hostname, :thresh, :warn, :redis
+      attr_accessor :hostname, :thresh, :warn, :redis, :metric
 
-      def initialize hostname: nil, thresh: nil, warn: nil, redis: nil
-        @hostname, @thresh, @warn, @redis = hostname, thresh, warn, redis
+      def initialize hostname: nil, thresh: nil, warn: nil, redis: nil, metric: nil
+        @hostname, @thresh, @warn, @redis, @metric = hostname, thresh, warn, redis, metric
       end
 
       def redis
@@ -89,7 +90,7 @@ module Htmon
 
       def result
         hv = self.class.callbacks[:handle_value]
-        post_value = hv ? hv.call(value) : value 
+        post_value = hv ? hv.call(value, self.metric) : value 
         %i{on_ok on_warn on_crit}.map do |type|
           c = self.class.callbacks[type]
           ret = Result.new
@@ -106,7 +107,7 @@ module Htmon
       end
 
       def value
-        @value ||= redis.get "metric::#{hostname}::#{self.class.metric_name}"
+        @value ||= redis.get "metric::#{hostname}::#{self.metric}"
       end
 
     end
@@ -114,4 +115,5 @@ module Htmon
 end
 
 require_relative 'modules/keepalive'
+require_relative 'modules/process'
 

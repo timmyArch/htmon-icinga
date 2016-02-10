@@ -14,10 +14,6 @@ module Htmon
           "Keepalive not received" if value.nil?
         end
 
-        performance_data do |value|
-          "signals=#{value}"
-        end
-
       end
     end
   end

@@ -1,4 +1,5 @@
 require 'redis'
+require 'active_support/all'
 require "htmon/icinga/version"
 require "htmon/icinga/module"
 
