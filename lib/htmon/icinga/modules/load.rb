@@ -13,14 +13,14 @@ module Htmon
         callback :on_ok do |value, warn, thresh|
           if value.avg5 < warn.to_i
             "Load values are #{value.avg1}, #{value.avg5}, #{value.avg1}"+
-              "| avg1=#{value.avg1} avg5=#{value.avg5},#{warn.to_i} avg15=#{value.avg15}"
+              "| avg1=#{value.avg1} avg5=#{value.avg5};#{warn.to_i} avg15=#{value.avg15}"
           end
         end
 
         callback :on_warn do |value, warn, thresh|
           if value.avg5 >= warn.to_i
             "Load values are #{value.avg1}, #{value.avg5}, #{value.avg1}"+
-              "| avg1=#{value.avg1} avg5=#{value.avg5},#{warn.to_i} avg15=#{value.avg15}"
+              "| avg1=#{value.avg1} avg5=#{value.avg5};#{warn.to_i} avg15=#{value.avg15}"
           end
         end
 
