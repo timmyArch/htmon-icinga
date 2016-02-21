@@ -7,7 +7,7 @@ module Htmon
         Value ||= Struct.new(:avg1,:avg5,:avg15)
 
         callback :handle_value do |value, metric|
-          Value.new(*metric.split("::").last.to_s.split(','))
+          Value.new(*metric.split("::").last.to_s.split(',').map(&:to_f))
         end
 
         callback :on_ok do |value, warn, thresh|
