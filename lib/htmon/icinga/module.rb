@@ -118,4 +118,5 @@ require_relative 'modules/keepalive'
 require_relative 'modules/process'
 require_relative 'modules/packages'
 require_relative 'modules/load'
+require_relative 'modules/filesystemusage'
 
